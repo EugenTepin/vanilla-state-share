@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .app {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        button {
+            color: white;
+            padding: 1em;
+            text-transform: uppercase;
+            font-weight: bold;
+            border: 2px solid white;
+            outline: 1px solid #fff;
+            cursor: pointer;
+        }
+
+        button:hover {
+            border: 0;
+            outline: 0;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+            grid-template-areas: ". . . ."". A B ."". . . .";
+            align-items: center;
+        }
+
+        .A {
+            grid-area: A;
+            align-self: center;
+            text-align: center;
+        }
+
+        .B {
+            grid-area: B;
+            align-self: center;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app grid-container">
+        <div class="A">
+            <button id="changeState"> Change State </button>
+        </div>
+        <div class="B">
+            <button id="unsubscribe"> Unsubscribe </button>
+        </div>
+    </div>
+    <script>
+        const body = document.body;
+        const changeStateBtn = document.getElementById('changeState');
+        const unsubscribeBtn = document.getElementById('unsubscribe');
+        const getRandomInt = (min, max) => {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+        }
+
+        const pickColor = () => {
+            const colors = ['gold', 'royalblue', 'tomato', 'teal', 'darkgrey', 'firebrick', 'mediumspringgreen', 'mediumslateblue', 'indigo', 'maroon'];
+            return colors[getRandomInt(0, colors.length)];
+        }
+
+        const setColor = (color) => {
+            body.style.backgroundColor = color;
+            changeStateBtn.style.backgroundColor = color;
+            unsubscribeBtn.style.backgroundColor = color;
+        };
+
+        setColor('tomato');
+    </script>
+</body>
+
+</html>
