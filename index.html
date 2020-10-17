@@ -72,13 +72,52 @@
             return colors[getRandomInt(0, colors.length)];
         }
 
-        const setColor = (color) => {
+        const setBgColor = (color) => {
             body.style.backgroundColor = color;
             changeStateBtn.style.backgroundColor = color;
             unsubscribeBtn.style.backgroundColor = color;
         };
 
-        setColor('tomato');
+        setBgColor('tomato');
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('stateSW.js').then(function (reg) {
+
+                if (reg.installing) {
+                    console.log('Service worker installing');
+                } else if (reg.waiting) {
+                    console.log('Service worker installed');
+                } else if (reg.active) {
+                    console.log('Service worker active');
+                }
+
+            }).catch(function (error) {
+                // registration failed
+                console.log('Registration failed with ' + error);
+            });
+        }
+
+        const dispatchState = () => {
+            const color = pickColor();
+            setBgColor(color);
+            navigator.serviceWorker.ready.then(registration => {
+                registration.active.postMessage({ color });
+            });
+        }
+
+        const listenState = (event) => {
+            setBgColor(event.data.color);
+        };
+
+        const unsubscribe = () => {
+            navigator.serviceWorker.removeEventListener('message', listenState);
+        }
+
+        navigator.serviceWorker.addEventListener('message', listenState);
+
+        changeStateBtn.addEventListener('click', dispatchState);
+        unsubscribeBtn.addEventListener('click', unsubscribe);
+
     </script>
 </body>
 
