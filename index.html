@@ -72,13 +72,32 @@
             return colors[getRandomInt(0, colors.length)];
         }
 
-        const setColor = (color) => {
+        const setBgColor = (color) => {
             body.style.backgroundColor = color;
             changeStateBtn.style.backgroundColor = color;
             unsubscribeBtn.style.backgroundColor = color;
         };
 
-        setColor('tomato');
+        setBgColor('tomato');
+
+        const dispatchState = () => {
+            const color = pickColor();
+            setBgColor(color);
+            window.localStorage.setItem('color', JSON.stringify({ value: color }));
+        }
+
+        const listenState = (e) => {
+            const { value } = JSON.parse(e.newValue);
+            setBgColor(value)
+        };
+
+        const unsubscribe = () => {
+            window.removeEventListener('storage', listenState);
+        }
+
+        window.addEventListener('storage', listenState);
+        changeStateBtn.addEventListener('click', dispatchState);
+        unsubscribeBtn.addEventListener('click', unsubscribe);
     </script>
 </body>
 
