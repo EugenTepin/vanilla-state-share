@@ -72,13 +72,29 @@
             return colors[getRandomInt(0, colors.length)];
         }
 
-        const setColor = (color) => {
+        const setBgColor = (color) => {
             body.style.backgroundColor = color;
             changeStateBtn.style.backgroundColor = color;
             unsubscribeBtn.style.backgroundColor = color;
         };
 
-        setColor('tomato');
+        setBgColor('tomato');
+
+        const bChannel = new BroadcastChannel('shared_state');
+        const dispatchState = () => {
+            const color = pickColor();
+            setBgColor(color);
+            bChannel.postMessage({ color });
+        };
+
+        const listenState = ({ data }) => {
+            setBgColor(data.color);
+        };
+
+        bChannel.addEventListener('message', listenState);
+
+        changeStateBtn.addEventListener('click', dispatchState);
+        unsubscribeBtn.addEventListener('click', () => bChannel.removeEventListener('message', listenState));
     </script>
 </body>
 
